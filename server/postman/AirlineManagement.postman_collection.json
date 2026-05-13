@@ -1,0 +1,416 @@
+{
+  "info": {
+    "name": "Airline Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/api" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) pm.collectionVariables.set('token', res.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@gmail.com\",\n  \"password\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Customer)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@gmail.com\",\n  \"password\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Nguyen Van B\",\n  \"email\": \"newuser@gmail.com\",\n  \"password\": \"123456\",\n  \"phone\": \"0912345678\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Airports",
+      "item": [
+        {
+          "name": "Get All Airports",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/airports"
+          }
+        },
+        {
+          "name": "Add Airport",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/airports",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"airport_code\": \"PQC\",\n  \"airport_name\": \"Phu Quoc International Airport\",\n  \"city\": \"Phu Quoc\",\n  \"country\": \"Vietnam\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Airport",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/airports/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"airport_code\": \"DAD\",\n  \"airport_name\": \"Da Nang International Airport\",\n  \"city\": \"Da Nang\",\n  \"country\": \"Vietnam\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Airport",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/airports/4"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flights",
+      "item": [
+        {
+          "name": "Get All Flights",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/flights"
+          }
+        },
+        {
+          "name": "Search Flights",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/flights?from=Da Nang&to=Ho Chi Minh",
+              "host": ["{{base_url}}"],
+              "path": ["flights"],
+              "query": [
+                { "key": "from", "value": "Da Nang" },
+                { "key": "to", "value": "Ho Chi Minh" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Flight By ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/flights/1"
+          }
+        },
+        {
+          "name": "Add Flight",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/flights",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"flight_code\": \"VN003\",\n  \"departure_airport_id\": 3,\n  \"arrival_airport_id\": 1,\n  \"airplane_id\": 1,\n  \"departure_time\": \"2026-06-01 07:00:00\",\n  \"arrival_time\": \"2026-06-01 09:00:00\",\n  \"price\": 1800000,\n  \"status\": \"AVAILABLE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Flight",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/flights/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"flight_code\": \"VN001\",\n  \"departure_airport_id\": 1,\n  \"arrival_airport_id\": 2,\n  \"airplane_id\": 1,\n  \"departure_time\": \"2026-05-10 08:00:00\",\n  \"arrival_time\": \"2026-05-10 09:30:00\",\n  \"price\": 1600000,\n  \"status\": \"AVAILABLE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Flight",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/flights/3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seats",
+      "item": [
+        {
+          "name": "Get Seats (with availability)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/seats?airplane_id=1&flight_id=1",
+              "host": ["{{base_url}}"],
+              "path": ["seats"],
+              "query": [
+                { "key": "airplane_id", "value": "1" },
+                { "key": "flight_id", "value": "1" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Seat",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/seats",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"airplane_id\": 1,\n  \"seat_number\": \"A1\",\n  \"class_type\": \"BUSINESS\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/bookings"
+          }
+        },
+        {
+          "name": "Get Booking By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/bookings/1"
+          }
+        },
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/bookings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tickets\": [\n    {\n      \"passenger\": {\n        \"full_name\": \"Nguyen Van A\",\n        \"gender\": \"MALE\",\n        \"date_of_birth\": \"1990-01-15\",\n        \"passport_number\": \"B1234567\",\n        \"nationality\": \"Vietnamese\"\n      },\n      \"flight_id\": 1,\n      \"seat_id\": 1,\n      \"ticket_price\": 1500000\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/bookings/1/cancel"
+          }
+        },
+        {
+          "name": "Confirm Booking (Admin/Staff)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/bookings/1/confirm"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Get All Payments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/payments"
+          }
+        },
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/payments",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"booking_id\": 1,\n  \"payment_method\": \"BANKING\",\n  \"amount\": 1500000\n}"
+            }
+          }
+        },
+        {
+          "name": "Refund Payment (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/payments/1/refund"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/users"
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/users/1"
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/users/2",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Nguyen Van A Updated\",\n  \"phone\": \"0999999999\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete User (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/users/3"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Staff",
+      "item": [
+        {
+          "name": "Get All Staff (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/staff"
+          }
+        },
+        {
+          "name": "Add Staff (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/staff",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 2,\n  \"position\": \"Check-in Agent\",\n  \"salary\": 8000000\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Staff (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/staff/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"position\": \"Senior Agent\",\n  \"salary\": 10000000\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Staff (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/staff/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/health"
+          }
+        }
+      ]
+    }
+  ]
+}
