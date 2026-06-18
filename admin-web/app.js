@@ -276,6 +276,10 @@ async function renderFlights() {
     const [flights, planes] = await Promise.all([api('GET','/flights'), api('GET','/airplanes')]);
     allFlights = flights;
     window._planes = planes;
+    // Cache airports luôn để modal dùng
+    if (!window._airports) {
+      api('GET', '/airports').then(a => window._airports = a).catch(()=>{});
+    }
     // Stats
     document.getElementById('flight-stats').innerHTML = `
       <div class="stat-card"><div class="stat-label">CHUYẾN BAY ĐANG HOẠT ĐỘNG</div><div class="stat-value">${flights.filter(f=>f.status==='AVAILABLE').length}</div></div>
@@ -348,24 +352,76 @@ async function deleteFlight(id) {
   try { await api('DELETE','/flights/'+id); renderFlights(); } catch(e) { alert(e.message); }
 }
 
-function openFlightModal(f) {
+async function openFlightModal(f) {
   f = f || {};
-  const planes = (window._planes||[]).map(p=>`<option value="${p.airplane_id}" ${f.airplane_id==p.airplane_id?'selected':''}>${p.airplane_name}</option>`).join('');
+  const isEdit = !!f.flight_id;
+
+  // Load airports nếu chưa có
+  if (!window._airports) {
+    try { window._airports = await api('GET', '/airports'); } catch(_) { window._airports = []; }
+  }
+
+  const airports = window._airports || [];
+  const planes   = (window._planes||[]).map(p =>
+    `<option value="${p.airplane_id}" ${f.airplane_id==p.airplane_id?'selected':''}>${p.airplane_name}</option>`
+  ).join('');
+
+  const depOpts = airports.map(a =>
+    `<option value="${a.airport_id}" ${f.departure_airport_id==a.airport_id?'selected':''}>${a.airport_code} — ${a.city}</option>`
+  ).join('');
+  const arrOpts = airports.map(a =>
+    `<option value="${a.airport_id}" ${f.arrival_airport_id==a.airport_id?'selected':''}>${a.airport_code} — ${a.city}</option>`
+  ).join('');
+
   const html = `<div class="modal-bg" id="fm">
     <div class="modal">
-      <div class="modal-title">${f.flight_id?'Sửa chuyến bay':'Thêm chuyến bay mới'}</div>
+      <div class="modal-title">${isEdit ? 'Sửa chuyến bay' : 'Thêm chuyến bay mới'}</div>
       <div class="form-grid">
-        <div class="form-group"><label>Mã chuyến bay</label><input id="f-code" value="${f.flight_code||''}"/></div>
-        <div class="form-group"><label>Giá vé (VND)</label><input id="f-price" type="number" value="${f.price||''}"/></div>
-        <div class="form-group"><label>Sân bay đi (ID)</label><input id="f-dep" type="number" value="${f.departure_airport_id||''}"/></div>
-        <div class="form-group"><label>Sân bay đến (ID)</label><input id="f-arr" type="number" value="${f.arrival_airport_id||''}"/></div>
-        <div class="form-group"><label>Giờ khởi hành</label><input id="f-dt" type="datetime-local" value="${(f.departure_time||'').slice(0,16)}"/></div>
-        <div class="form-group"><label>Giờ đến</label><input id="f-at" type="datetime-local" value="${(f.arrival_time||'').slice(0,16)}"/></div>
-        <div class="form-group"><label>Máy bay</label><select id="f-plane"><option value="">-- Chọn --</option>${planes}</select></div>
-        <div class="form-group"><label>Trạng thái</label>
+        <div class="form-group">
+          <label>Mã chuyến bay <span style="color:#9aa5b8;font-weight:400">(tự động tạo)</span></label>
+          <input id="f-code" value="${f.flight_code||''}" placeholder="Tự động khi chọn sân bay" readonly
+            style="background:#f8faff;color:#1a2b4a;font-weight:600"/>
+        </div>
+        <div class="form-group">
+          <label>Giá vé (VND)</label>
+          <input id="f-price" type="number" value="${f.price||''}" placeholder="VD: 1500000"/>
+        </div>
+        <div class="form-group">
+          <label>Sân bay đi</label>
+          <select id="f-dep" onchange="autoGenCode()">
+            <option value="">-- Chọn sân bay đi --</option>
+            ${depOpts}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Sân bay đến</label>
+          <select id="f-arr" onchange="autoGenCode()">
+            <option value="">-- Chọn sân bay đến --</option>
+            ${arrOpts}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Giờ khởi hành</label>
+          <input id="f-dt" type="datetime-local" value="${(f.departure_time||'').slice(0,16)}"/>
+        </div>
+        <div class="form-group">
+          <label>Giờ đến</label>
+          <input id="f-at" type="datetime-local" value="${(f.arrival_time||'').slice(0,16)}"/>
+        </div>
+        <div class="form-group">
+          <label>Máy bay</label>
+          <select id="f-plane">
+            <option value="">-- Chọn --</option>${planes}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Trạng thái</label>
           <select id="f-stat">
-            ${['AVAILABLE','DEPARTED','CANCELLED','DELAYED'].map(s=>`<option ${f.status===s?'selected':''}>${s}</option>`).join('')}
-          </select></div>
+            ${['AVAILABLE','DEPARTED','CANCELLED','DELAYED','FULL'].map(s =>
+              `<option ${f.status===s?'selected':''}>${s}</option>`
+            ).join('')}
+          </select>
+        </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="document.getElementById('fm').remove()">Hủy</button>
@@ -375,20 +431,36 @@ function openFlightModal(f) {
   document.body.insertAdjacentHTML('beforeend', html);
 }
 
+// Tự sinh mã chuyến bay: VN-{DEP_CODE}{ARR_CODE}
+function autoGenCode() {
+  const airports = window._airports || [];
+  const depId = +document.getElementById('f-dep')?.value;
+  const arrId = +document.getElementById('f-arr')?.value;
+  if (!depId || !arrId) return;
+  const dep = airports.find(a => a.airport_id === depId);
+  const arr = airports.find(a => a.airport_id === arrId);
+  if (dep && arr) {
+    document.getElementById('f-code').value = `VN-${dep.airport_code}${arr.airport_code}`;
+  }
+}
+
 async function saveFlight(id) {
+  const code = document.getElementById('f-code').value.trim();
+  if (!code) { alert('Vui lòng chọn sân bay đi và đến để tạo mã chuyến bay'); return; }
   const body = {
-    flight_code: document.getElementById('f-code').value,
+    flight_code: code,
     price: document.getElementById('f-price').value,
     departure_airport_id: +document.getElementById('f-dep').value,
-    arrival_airport_id: +document.getElementById('f-arr').value,
-    departure_time: document.getElementById('f-dt').value,
-    arrival_time: document.getElementById('f-at').value,
-    airplane_id: +document.getElementById('f-plane').value,
-    status: document.getElementById('f-stat').value
+    arrival_airport_id:   +document.getElementById('f-arr').value,
+    departure_time:  document.getElementById('f-dt').value,
+    arrival_time:    document.getElementById('f-at').value,
+    airplane_id:     +document.getElementById('f-plane').value,
+    status:          document.getElementById('f-stat').value
   };
+  if (!body.departure_airport_id || !body.arrival_airport_id) { alert('Vui lòng chọn sân bay đi và đến'); return; }
   try {
-    if (id) await api('PUT','/flights/'+id, body);
-    else await api('POST','/flights', body);
+    if (id) await api('PUT', '/flights/'+id, body);
+    else    await api('POST', '/flights', body);
     document.getElementById('fm').remove();
     renderFlights();
   } catch(e) { alert(e.message); }

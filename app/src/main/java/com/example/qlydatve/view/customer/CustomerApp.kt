@@ -9,7 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.qlydatve.model.Flight
 import com.example.qlydatve.model.Seat
 import com.example.qlydatve.model.User
@@ -18,6 +22,7 @@ import com.example.qlydatve.view.booking.PaymentScreen
 import com.example.qlydatve.view.booking.PaymentSuccessScreen
 import com.example.qlydatve.view.booking.SeatSelectionScreen
 import com.example.qlydatve.viewmodel.BookingViewModel
+import com.example.qlydatve.viewmodel.NotificationViewModel
 
 private sealed class CustomerNav {
     object Home : CustomerNav()
@@ -30,7 +35,7 @@ private sealed class CustomerNav {
     data class PaymentSuccess(val flight: Flight, val seat: Seat, val bookingCode: String) : CustomerNav()
 }
 
-enum class CustomerScreen { HOME, FLIGHTS, BOOKINGS, PROFILE }
+enum class CustomerScreen { HOME, FLIGHTS, BOOKINGS, NOTIFICATIONS, PROFILE }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +46,13 @@ fun CustomerApp(user: User, onLogout: () -> Unit) {
 
     val bookingVm: BookingViewModel = viewModel()
     val bookingState by bookingVm.uiState.collectAsStateWithLifecycle()
+    val notifVm: NotificationViewModel = viewModel(key = "notif_vm")
+    val notifState by notifVm.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        notifVm.load()
+        notifVm.startPolling()
+    }
 
     // Xử lý màn hình chat hỗ trợ
     if (nav is CustomerNav.Chat) {
@@ -146,6 +158,28 @@ fun CustomerApp(user: User, onLogout: () -> Unit) {
                     label = { Text("Vé của tôi") }
                 )
                 NavigationBarItem(
+                    selected = currentTab == CustomerScreen.NOTIFICATIONS,
+                    onClick = {
+                        currentTab = CustomerScreen.NOTIFICATIONS
+                        notifVm.load()
+                    },
+                    icon = {
+                        BadgedBox(badge = {
+                            if (notifState.unreadCount > 0) {
+                                Badge {
+                                    Text(
+                                        if (notifState.unreadCount > 9) "9+" else notifState.unreadCount.toString(),
+                                        fontSize = 9.sp
+                                    )
+                                }
+                            }
+                        }) {
+                            Icon(Icons.Default.Notifications, null)
+                        }
+                    },
+                    label = { Text("Thông báo") }
+                )
+                NavigationBarItem(
                     selected = currentTab == CustomerScreen.PROFILE,
                     onClick = { currentTab = CustomerScreen.PROFILE; nav = CustomerNav.Profile },
                     icon = { Icon(Icons.Default.Person, null) },
@@ -173,6 +207,7 @@ fun CustomerApp(user: User, onLogout: () -> Unit) {
                 CustomerScreen.BOOKINGS -> BookingScreen(
                     currentUser = user
                 )
+                CustomerScreen.NOTIFICATIONS -> NotificationScreen()
                 CustomerScreen.PROFILE -> ProfileScreen(
                     user = user,
                     onLogout = onLogout,
