@@ -164,4 +164,26 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body body: SendMessageRequest
     ): Response<Message>
+
+    // ── Notifications ─────────────────────────────────────────────────────────
+    @GET("notifications")
+    suspend fun getNotifications(
+        @Header("Authorization") token: String
+    ): Response<List<AppNotification>>
+
+    @GET("notifications/unread-count")
+    suspend fun getUnreadCount(
+        @Header("Authorization") token: String
+    ): Response<Map<String, Int>>
+
+    @PATCH("notifications/read-all")
+    suspend fun markAllRead(
+        @Header("Authorization") token: String
+    ): Response<MessageResponse>
+
+    @PATCH("notifications/{id}/read")
+    suspend fun markRead(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Response<MessageResponse>
 }

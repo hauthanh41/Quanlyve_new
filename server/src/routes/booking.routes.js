@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const db = require('../config/db');
 const { authenticate, requireRole } = require('../middleware/auth');
+const { createNotification } = require('./notification.routes');
 
 // GET /api/bookings  (ADMIN/STAFF: all, CUSTOMER: own)
 router.get('/', authenticate, async (req, res) => {
@@ -135,6 +136,15 @@ router.post('/', authenticate, async (req, res) => {
     }
 
     await conn.commit();
+
+    // Gửi thông báo cho customer
+    await createNotification(
+      req.user.user_id,
+      '✈ Đặt vé thành công!',
+      `Mã đặt vé #${booking_id} đã được tạo. Tổng tiền: ${total.toLocaleString('vi-VN')}đ. Vui lòng hoàn tất thanh toán.`,
+      'BOOKING'
+    );
+
     res.status(201).json({ message: 'Đặt vé thành công', booking_id });
   } catch (err) {
     await conn.rollback();
@@ -171,6 +181,15 @@ router.patch('/:id/cancel', authenticate, async (req, res) => {
        WHERE t.booking_id = ?`,
       [req.params.id]
     );
+
+    // Thông báo hủy vé
+    await createNotification(
+      booking.user_id,
+      '❌ Vé đã bị hủy',
+      `Đặt vé #${req.params.id} đã được hủy thành công.`,
+      'CANCEL'
+    );
+
     res.json({ message: 'Hủy booking thành công' });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -184,6 +203,18 @@ router.patch('/:id/confirm', authenticate, requireRole('ADMIN', 'STAFF'), async 
       "UPDATE bookings SET booking_status = 'CONFIRMED' WHERE booking_id = ?",
       [req.params.id]
     );
+
+    // Thông báo xác nhận cho customer
+    const [rows] = await db.query('SELECT user_id FROM bookings WHERE booking_id = ?', [req.params.id]);
+    if (rows.length > 0) {
+      await createNotification(
+        rows[0].user_id,
+        '✅ Vé đã được xác nhận!',
+        `Đặt vé #${req.params.id} đã được xác nhận. Chúc bạn có chuyến đi vui vẻ!`,
+        'CONFIRM'
+      );
+    }
+
     res.json({ message: 'Xác nhận booking thành công' });
   } catch (err) {
     res.status(500).json({ message: err.message });

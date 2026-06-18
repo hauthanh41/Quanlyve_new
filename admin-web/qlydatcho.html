@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SkyOps Admin - Quản lý đặt chỗ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "on-surface-variant": "#45464d",
+                  "on-tertiary": "#ffffff",
+                  "on-secondary": "#ffffff",
+                  "error-container": "#ffdad6",
+                  "tertiary-fixed": "#e0e3e5",
+                  "surface-container-high": "#dce9ff",
+                  "outline-variant": "#c6c6cd",
+                  "surface-tint": "#565e74",
+                  "surface": "#f8f9ff",
+                  "surface-container-highest": "#d3e4fe",
+                  "on-surface": "#0b1c30",
+                  "primary-container": "#131b2e",
+                  "on-secondary-fixed-variant": "#004e5c",
+                  "background": "#f8f9ff",
+                  "on-tertiary-fixed-variant": "#444749",
+                  "secondary-fixed-dim": "#4cd7f6",
+                  "primary-fixed-dim": "#bec6e0",
+                  "secondary-fixed": "#acedff",
+                  "on-error-container": "#93000a",
+                  "inverse-primary": "#bec6e0",
+                  "on-tertiary-fixed": "#191c1e",
+                  "tertiary": "#000000",
+                  "on-secondary-container": "#006172",
+                  "primary": "#000000",
+                  "inverse-surface": "#213145",
+                  "inverse-on-surface": "#eaf1ff",
+                  "surface-container-lowest": "#ffffff",
+                  "surface-bright": "#f8f9ff",
+                  "secondary-container": "#57dffe",
+                  "tertiary-fixed-dim": "#c4c7c9",
+                  "surface-container": "#e5eeff",
+                  "on-primary-fixed": "#131b2e",
+                  "on-primary-fixed-variant": "#3f465c",
+                  "error": "#ba1a1a",
+                  "outline": "#76777d",
+                  "on-primary-container": "#7c839b",
+                  "surface-variant": "#d3e4fe",
+                  "surface-container-low": "#eff4ff",
+                  "tertiary-container": "#191c1e",
+                  "on-secondary-fixed": "#001f26",
+                  "on-background": "#0b1c30",
+                  "secondary": "#00687a",
+                  "on-primary": "#ffffff",
+                  "surface-dim": "#cbdbf5",
+                  "on-tertiary-container": "#818486",
+                  "on-error": "#ffffff",
+                  "primary-fixed": "#dae2fd"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.125rem",
+                  "lg": "0.25rem",
+                  "xl": "0.5rem",
+                  "full": "0.75rem"
+          },
+          "spacing": {
+                  "mobile-margin": "16px",
+                  "desktop-max-width": "1600px",
+                  "sidebar-width": "260px",
+                  "container-padding": "24px",
+                  "unit": "4px",
+                  "tablet-margin": "24px",
+                  "gutter": "16px"
+          },
+          "fontFamily": {
+                  "body-sm": ["Inter"],
+                  "headline-sm": ["Inter"],
+                  "body-lg": ["Inter"],
+                  "headline-lg": ["Inter"],
+                  "body-md": ["Inter"],
+                  "label-caps": ["Inter"],
+                  "headline-md": ["Inter"],
+                  "data-mono": ["JetBrains Mono"]
+          },
+          "fontSize": {
+                  "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                  "headline-sm": ["18px", {"lineHeight": "26px", "fontWeight": "600"}],
+                  "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                  "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                  "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                  "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                  "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                  "data-mono": ["13px", {"lineHeight": "20px", "fontWeight": "500"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Layout specific utility */
+    .left-sidebar-width { width: 260px; }
+    .ml-sidebar-width { margin-left: 260px; }
+  </style>
+</head>
+<body class="bg-background font-body-md text-on-background antialiased overflow-x-hidden">
+<!-- Side Navigation Bar -->
+<aside class="h-screen w-sidebar-width fixed left-0 top-0 bg-primary-container flex flex-col z-50">
+<div class="px-6 py-8">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-secondary-fixed rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed text-2xl">flight_takeoff</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-tertiary leading-none">SkyOps Admin</h1>
+<p class="text-on-primary-container text-body-sm mt-1">Điều hành bay</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Bảng điều khiển</span>
+</a>
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#flights">
+<span class="material-symbols-outlined">flight_takeoff</span>
+<span class="font-body-md">Chuyến bay</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center space-x-3 bg-on-primary-fixed-variant/20 border-l-4 border-secondary-fixed text-secondary-fixed px-4 py-3 cursor-pointer active:scale-95" href="index.html#bookings">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
+<span class="font-body-md">Đặt chỗ</span>
+</a>
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#customers">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md">Khách hàng</span>
+</a>
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#revenue">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md">Báo cáo</span>
+</a>
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#settings">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Cài đặt</span>
+</a>
+</nav>
+<div class="p-4 border-t border-on-primary-fixed-variant/20">
+<div class="flex items-center space-x-3 px-2 py-3 bg-on-primary-fixed-variant/10 rounded-lg">
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full border border-secondary-fixed/30" data-alt="A professional headshot of a senior aviation administrator in a clean-cut uniform, featuring a confident and neutral expression. The image is captured in a brightly lit, modern operations center with sleek glass and brushed metal surfaces in the background. The color palette follows the corporate primary-container navy and secondary-fixed cyan tones, emphasizing authority and efficiency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtrW3YgUdvfXppIuSfMD_jj5nA3_ScEes-CcM6WBMd5ZigwQje-UlB9NiD3zetrlfE9NYgiQzOVKuP1tpBBKrfsr2FLP5Lj-aipAK8pXsJA1gH9fpzBZ8i5X2oHjVqYIlDNPOA2GRwXPbBvWrUqC9wKXQo1sXchcVb0ihBAPgvBRjmWHCujvFKDPMN-s0pykY-GdvIMLUV14PAQV7aKiVaY6ki17NSzCU88-1ksoVqUIuiZBspmYYQuAvpL8vjBI87LmPS6aSl900"/>
+<div class="overflow-hidden">
+<p class="text-on-tertiary font-body-md truncate">Quản trị viên</p>
+<p class="text-on-primary-container text-body-sm truncate">Super Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Bar -->
+<header class="h-16 fixed top-0 right-0 left-sidebar-width bg-surface-container-lowest border-b border-outline-variant z-40 flex justify-between items-center px-container-padding">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded focus:outline-none focus:ring-2 focus:ring-secondary text-body-md" placeholder="Tìm kiếm đặt chỗ, hành khách, hoặc chuyến bay..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all text-on-surface-variant cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-all text-on-surface-variant cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<button class="flex items-center space-x-2 text-primary font-bold hover:bg-surface-container-low px-3 py-1.5 rounded transition-all active:opacity-80">
+<span class="font-body-md">Thao tác</span>
+<span class="material-symbols-outlined">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-sidebar-width pt-16 min-h-screen">
+<div class="p-container-padding space-y-6">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Quản lý đặt chỗ</h2>
+<p class="text-on-surface-variant font-body-md">Tổng quan thời gian thực về tất cả các yêu cầu đặt chỗ hiện tại và sắp tới.</p>
+</div>
+<div class="flex space-x-3">
+<button class="px-4 py-2 bg-surface-container-lowest border border-outline text-on-surface-variant flex items-center space-x-2 rounded hover:bg-surface-container-low transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span class="font-label-caps text-label-caps uppercase">Xuất file CSV</span>
+</button>
+<button class="px-4 py-2 bg-secondary text-on-secondary flex items-center space-x-2 rounded hover:opacity-90 transition-all active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="font-label-caps text-label-caps uppercase">Tạo đặt chỗ mới</span>
+</button>
+</div>
+</div>
+<!-- Content Grid -->
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- Booking Table Section -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">
+<div class="flex items-center space-x-2">
+<input class="rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<span>Mã đặt chỗ</span>
+</div>
+</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Tên hành khách</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Số hiệu chuyến</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Ghế</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Thanh toán</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Ngày</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors duration-150 cursor-pointer group" onclick="toggleDetail('B-77421')">
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">
+<div class="flex items-center space-x-2">
+<input class="rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<span>#77421</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="font-body-md font-semibold text-on-surface">Elena Rodriguez</div>
+<div class="text-body-sm text-on-surface-variant">Hạng Phổ thông Plus</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono">AA-4421</td>
+<td class="px-6 py-4 font-data-mono text-data-mono">14C</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded bg-secondary-fixed/10 text-on-secondary-container text-body-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                        Đã thanh toán
+                      </span>
+</td>
+<td class="px-6 py-4 text-on-surface-variant font-body-sm">24 Th10, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 hover:bg-outline-variant/20 rounded text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors duration-150 cursor-pointer group" onclick="toggleDetail('B-89102')">
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">
+<div class="flex items-center space-x-2">
+<input class="rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<span>#89102</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="font-body-md font-semibold text-on-surface">Marcus Chen</div>
+<div class="text-body-sm text-on-surface-variant">Hạng Thương gia</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono">DL-0129</td>
+<td class="px-6 py-4 font-data-mono text-data-mono">03A</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded bg-amber-500/10 text-amber-700 text-body-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5"></span>
+                        Chờ xử lý
+                      </span>
+</td>
+<td class="px-6 py-4 text-on-surface-variant font-body-sm">25 Th10, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 hover:bg-outline-variant/20 rounded text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors duration-150 cursor-pointer group" onclick="toggleDetail('B-66230')">
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">
+<div class="flex items-center space-x-2">
+<input class="rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<span>#66230</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="font-body-md font-semibold text-on-surface">Sarah Williams</div>
+<div class="text-body-sm text-on-surface-variant">Hạng Nhất</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono">UA-9904</td>
+<td class="px-6 py-4 font-data-mono text-data-mono">01F</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded bg-secondary-fixed/10 text-on-secondary-container text-body-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mr-1.5"></span>
+                        Đã thanh toán
+                      </span>
+</td>
+<td class="px-6 py-4 text-on-surface-variant font-body-sm">26 Th10, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 hover:bg-outline-variant/20 rounded text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors duration-150 cursor-pointer group" onclick="toggleDetail('B-10293')">
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">
+<div class="flex items-center space-x-2">
+<input class="rounded border-outline-variant text-secondary focus:ring-secondary" type="checkbox"/>
+<span>#10293</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="font-body-md font-semibold text-on-surface">James Cooper</div>
+<div class="text-body-sm text-on-surface-variant">Hạng Phổ thông</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono">BA-0283</td>
+<td class="px-6 py-4 font-data-mono text-data-mono">32B</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded bg-error-container text-error text-body-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-error mr-1.5"></span>
+                        Đã hoàn tiền
+                      </span>
+</td>
+<td class="px-6 py-4 text-on-surface-variant font-body-sm">26 Th10, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="p-1 hover:bg-outline-variant/20 rounded text-on-surface-variant">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
+<span class="text-body-sm text-on-surface-variant">Hiển thị 1-10 trong số 2.492 đặt chỗ</span>
+<div class="flex space-x-2">
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container-lowest transition-all disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container-lowest transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Detail Panel (Sticky) -->
+<div class="col-span-12 lg:col-span-4 sticky top-24">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden shadow-sm transition-all duration-300 transform" id="booking-detail-panel">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Chi tiết đặt chỗ</h3>
+<span class="px-2 py-1 bg-surface-container-high rounded text-data-mono text-body-sm" id="detail-id">B-77421</span>
+</div>
+<div class="p-6 space-y-6">
+<!-- Passenger Card -->
+<div class="flex items-start space-x-4">
+<img alt="Passenger Elena" class="w-16 h-16 rounded-xl object-cover bg-surface-container" data-alt="A detailed portrait of a modern traveler, Elena Rodriguez, wearing professional attire with a slight smile. The background is a blurred airport terminal with subtle hints of information screens and departure gates, utilizing the SkyOps brand color palette of deep navies and vibrant cyan accents for a consistent corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5-fQZ2zq6oF43j8mnjM_aNUfWV-n0ygSNGFoSjgksVGPlpP0FqbSyt5vEDKLzpmxazdArXon3BRGxFwvkaCLbeIvgvMXjR54idBSWl5r6EQBuoW02yOeTeEcqG8gnfWYmqpZx03sAE_vjpazxE0s25t_xb9jU5X3dhUOIgPpVrppqCNg-jOCUzC8cGEhzfELOmW9e4kHMaCwlV04zzF_izhtAWItkikt0WMfAwbXWBwyH68es-wcAngzRXVRiOZFGajXnEInwsYk"/>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface" id="detail-name">Elena Rodriguez</h4>
+<p class="text-on-surface-variant font-body-md">Hạng thành viên: <span class="text-secondary font-semibold">Bạch kim</span></p>
+<div class="flex space-x-2 mt-2">
+<span class="px-2 py-0.5 bg-surface-container-high rounded text-label-caps text-label-caps uppercase">Business</span>
+<span class="px-2 py-0.5 bg-secondary-fixed/20 text-on-secondary-container rounded text-label-caps text-label-caps uppercase">TSA Pre-Check</span>
+</div>
+</div>
+</div>
+<!-- Contact Info -->
+<div class="space-y-4 pt-4 border-t border-outline-variant">
+<h5 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Liên hệ hành khách</h5>
+<div class="grid grid-cols-1 gap-3">
+<div class="flex items-center space-x-3 group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">mail</span>
+<span class="text-body-md text-on-surface" id="detail-email">elena.rodriguez@example.com</span>
+</div>
+<div class="flex items-center space-x-3 group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">call</span>
+<span class="text-body-md text-on-surface" id="detail-phone">+1 (555) 234-8891</span>
+</div>
+<div class="flex items-center space-x-3 group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">home</span>
+<span class="text-body-md text-on-surface">San Francisco, CA, USA</span>
+</div>
+</div>
+</div>
+<!-- Flight Summary Card -->
+<div class="bg-primary-container p-4 rounded-xl text-on-tertiary">
+<div class="flex justify-between items-center mb-4">
+<span class="font-data-mono text-data-mono text-secondary-fixed">SFO</span>
+<div class="flex-1 flex flex-col items-center px-4">
+<div class="w-full h-px border-b border-dashed border-on-primary-container relative">
+<span class="material-symbols-outlined absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-secondary-fixed text-lg">flight</span>
+</div>
+</div>
+<span class="font-data-mono text-data-mono text-secondary-fixed">LHR</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-on-primary-container text-body-sm font-label-caps uppercase">Chuyến bay</p>
+<p class="font-body-md font-semibold">AA-4421</p>
+</div>
+<div>
+<p class="text-on-primary-container text-body-sm font-label-caps uppercase">Ghế</p>
+<p class="font-body-md font-semibold">14C (Lối đi)</p>
+</div>
+<div>
+<p class="text-on-primary-container text-body-sm font-label-caps uppercase">Khởi hành</p>
+<p class="font-body-md">22 Th10, 11:45 CH</p>
+</div>
+<div>
+<p class="text-on-primary-container text-body-sm font-label-caps uppercase">Cửa số</p>
+<p class="font-body-md">G14</p>
+</div>
+</div>
+</div>
+<!-- Quick Actions -->
+<div class="pt-4 grid grid-cols-2 gap-3">
+<button class="px-4 py-2 border border-outline rounded font-body-md text-on-surface hover:bg-surface-container-low transition-all active:scale-95">Đổi lịch</button>
+<button class="px-4 py-2 bg-error text-on-error rounded font-body-md hover:opacity-90 transition-all active:scale-95">Hủy chuyến</button>
+<button class="col-span-2 px-4 py-2 bg-secondary text-on-secondary rounded font-body-md flex items-center justify-center space-x-2 hover:opacity-90 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">print</span>
+<span>In thẻ lên máy bay</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Activity Feed Preview -->
+<div class="mt-6 bg-surface-container-low p-4 rounded-lg border border-outline-variant/50">
+<h5 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-3">Hoạt động gần đây</h5>
+<div class="space-y-4">
+<div class="flex items-start space-x-3">
+<div class="mt-1 w-2 h-2 rounded-full bg-secondary"></div>
+<div>
+<p class="text-body-sm text-on-surface">Thanh toán được xác nhận qua Stripe</p>
+<p class="text-[10px] text-on-surface-variant">2 giờ trước</p>
+</div>
+</div>
+<div class="flex items-start space-x-3">
+<div class="mt-1 w-2 h-2 rounded-full bg-outline"></div>
+<div>
+<p class="text-body-sm text-on-surface">Email xác nhận đã được gửi</p>
+<p class="text-[10px] text-on-surface-variant">2 giờ trước</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Interactive Search Overlay (Hidden by default) -->
+<div class="fixed inset-0 bg-on-surface/40 backdrop-blur-sm z-[60] hidden transition-opacity duration-300" id="search-overlay">
+<div class="max-w-2xl mx-auto mt-20 bg-surface-container-lowest rounded-xl shadow-2xl overflow-hidden">
+<div class="p-4 border-b border-outline-variant flex items-center space-x-4">
+<span class="material-symbols-outlined text-secondary">search</span>
+<input class="flex-1 border-none focus:ring-0 text-headline-sm font-headline-sm" id="overlay-search-input" placeholder="Nhập số hiệu chuyến bay hoặc tên..." type="text"/>
+<kbd class="px-2 py-1 bg-surface-container-low border border-outline-variant rounded text-body-sm text-on-surface-variant">ESC</kbd>
+</div>
+<div class="p-4 max-h-[400px] overflow-y-auto">
+<p class="text-label-caps text-on-surface-variant uppercase mb-2 px-2">Thao tác nhanh</p>
+<div class="space-y-1">
+<button class="w-full flex items-center px-2 py-3 rounded-lg hover:bg-surface-container-low text-on-surface transition-colors">
+<span class="material-symbols-outlined mr-3 text-secondary">flight_takeoff</span>
+<div class="text-left">
+<p class="font-body-md font-semibold">Theo dõi trạng thái bay</p>
+<p class="text-body-sm text-on-surface-variant">Nhập số hiệu chuyến bay để xem vị trí trực tiếp</p>
+</div>
+</button>
+<button class="w-full flex items-center px-2 py-3 rounded-lg hover:bg-surface-container-low text-on-surface transition-colors">
+<span class="material-symbols-outlined mr-3 text-secondary">person_add</span>
+<div class="text-left">
+<p class="font-body-md font-semibold">Đăng ký hành khách mới</p>
+<p class="text-body-sm text-on-surface-variant">Thêm nhanh cho khách hàng thường xuyên</p>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // Redirect to main SPA
+    if (!sessionStorage.getItem('from_index')) {
+      window.location.href = 'index.html#bookings';
+    }
+    function toggleDetail(id) {
+      const panel = document.getElementById('booking-detail-panel');
+      const idEl = document.getElementById('detail-id');
+      const nameEl = document.getElementById('detail-name');
+      const emailEl = document.getElementById('detail-email');
+      
+      // Visual feedback for row selection
+      const rows = document.querySelectorAll('tbody tr');
+      rows.forEach(r => r.classList.remove('bg-surface-container-high'));
+      
+      // Simple logic to mock data changes
+      const names = {
+        '#77421': 'Elena Rodriguez',
+        '#89102': 'Marcus Chen',
+        '#66230': 'Sarah Williams',
+        '#10293': 'James Cooper'
+      };
+      
+      const emails = {
+        '#77421': 'elena.rodriguez@example.com',
+        '#89102': 'm.chen.dev@techcorp.com',
+        '#66230': 'sarah.wills@globalair.com',
+        '#10293': 'jcooper@logistics.net'
+      };
+
+      // Find the ID in the clicked row
+      const targetId = event.currentTarget.querySelector('td span:last-child').innerText;
+      
+      idEl.innerText = targetId;
+      nameEl.innerText = names[targetId] || 'Tên hành khách';
+      emailEl.innerText = emails[targetId] || 'contact@example.com';
+      
+      // Highlight selected
+      event.currentTarget.classList.add('bg-surface-container-high');
+
+      // Animation effect
+      panel.style.transform = 'scale(0.98)';
+      setTimeout(() => {
+        panel.style.transform = 'scale(1)';
+      }, 100);
+    }
+
+    // Modal / Search Micro-interaction
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        const overlay = document.getElementById('search-overlay');
+        overlay.classList.toggle('hidden');
+        if (!overlay.classList.contains('hidden')) {
+          document.getElementById('overlay-search-input').focus();
+        }
+      }
+      if (e.key === 'Escape') {
+        document.getElementById('search-overlay').classList.add('hidden');
+      }
+    });
+
+    // Close overlay on click outside
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target.id === 'search-overlay') {
+        document.getElementById('search-overlay').classList.add('hidden');
+      }
+    });
+  </script>
+</body></html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SkyOps Admin - Quản lý chuyến bay</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#45464d",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "tertiary-fixed": "#e0e3e5",
+                    "surface-container-high": "#dce9ff",
+                    "outline-variant": "#c6c6cd",
+                    "surface-tint": "#565e74",
+                    "surface": "#f8f9ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "primary-container": "#131b2e",
+                    "on-secondary-fixed-variant": "#004e5c",
+                    "background": "#f8f9ff",
+                    "on-tertiary-fixed-variant": "#444749",
+                    "secondary-fixed-dim": "#4cd7f6",
+                    "primary-fixed-dim": "#bec6e0",
+                    "secondary-fixed": "#acedff",
+                    "on-error-container": "#93000a",
+                    "inverse-primary": "#bec6e0",
+                    "on-tertiary-fixed": "#191c1e",
+                    "tertiary": "#000000",
+                    "on-secondary-container": "#006172",
+                    "primary": "#000000",
+                    "inverse-surface": "#213145",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f8f9ff",
+                    "secondary-container": "#57dffe",
+                    "tertiary-fixed-dim": "#c4c7c9",
+                    "surface-container": "#e5eeff",
+                    "on-primary-fixed": "#131b2e",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "error": "#ba1a1a",
+                    "outline": "#76777d",
+                    "on-primary-container": "#7c839b",
+                    "surface-variant": "#d3e4fe",
+                    "surface-container-low": "#eff4ff",
+                    "tertiary-container": "#191c1e",
+                    "on-secondary-fixed": "#001f26",
+                    "on-background": "#0b1c30",
+                    "secondary": "#00687a",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#cbdbf5",
+                    "on-tertiary-container": "#818486",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#dae2fd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "mobile-margin": "16px",
+                    "desktop-max-width": "1600px",
+                    "sidebar-width": "260px",
+                    "container-padding": "24px",
+                    "unit": "4px",
+                    "tablet-margin": "24px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "data-mono": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-sm": ["18px", {"lineHeight": "26px", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "data-mono": ["13px", {"lineHeight": "20px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-item-active { border-left-width: 4px; }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- Side Navigation Shell -->
+<aside class="h-screen w-sidebar-width fixed left-0 top-0 bg-primary-container flex flex-col z-50">
+<div class="px-6 py-8">
+<h1 class="font-headline-md text-headline-md font-bold text-on-tertiary">SkyOps Admin</h1>
+<p class="font-body-sm text-body-sm text-on-primary-container opacity-80">Điều hành bay</p>
+</div>
+<nav class="flex-1 mt-4">
+<!-- Dashboard -->
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Bảng điều khiển</span>
+</a>
+<!-- Flights (Active) -->
+<a class="flex items-center space-x-3 bg-on-primary-fixed-variant/20 border-l-4 border-secondary-fixed text-secondary-fixed px-4 py-3 cursor-pointer active:scale-95" href="index.html#flights">
+<span class="material-symbols-outlined">flight_takeoff</span>
+<span class="font-body-md text-body-md font-semibold">Chuyến bay</span>
+</a>
+<!-- Bookings -->
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#bookings">
+<span class="material-symbols-outlined">confirmation_number</span>
+<span class="font-body-md text-body-md">Đặt chỗ</span>
+</a>
+<!-- Customers -->
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#customers">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Khách hàng</span>
+</a>
+<!-- Reports -->
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#revenue">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md text-body-md">Báo cáo</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary px-4 py-3 hover:bg-on-primary-fixed-variant/10 transition-colors duration-200 cursor-pointer active:scale-95" href="index.html#settings">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Cài đặt</span>
+</a>
+</nav>
+<div class="p-6">
+<div class="flex items-center space-x-3 p-2 bg-on-primary-fixed-variant/10 rounded-lg">
+<img alt="Administrator Profile" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of a mature male aviation executive in a crisp navy blue suit. The background is a slightly blurred high-tech air traffic control center with glowing screens. The lighting is bright and clean, emphasizing a corporate and authoritative atmosphere suitable for a premium aviation software platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmm1L0LrD-I0bEwy9IdqnUEBGgTgLUZuHbpXHSV09Yp77TBbuK_UBnEJVw_HHq7o8F3DRoYqasb8jCbd0_IMNrRpVhFRYCzM6U26hOQ3AlSbD8lfJPU2I1SBCsGovchc0psCZ9cA29Q0B1CsX12lUWRXY4wRq1OYdFuKgzdUpLnNBKDBNkSo7zm7kwJ2Zwcbb8av55l5SjHelion0Z-3ZRWjjyWbta37TCgP65b3n9Mzymk83QV7YTQQ3PNwuwr3_X3_XuPmp6Kqo"/>
+<div class="overflow-hidden">
+<p class="font-body-md text-body-md font-bold text-on-tertiary truncate">Capt. Miller</p>
+<p class="font-body-sm text-body-sm text-on-primary-container truncate">Trưởng bộ phận vận hành</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="h-16 sticky top-0 right-0 bg-surface-container-lowest flex justify-between items-center px-container-padding border-b border-outline-variant z-40">
+<div class="flex items-center space-x-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg font-body-md text-body-md focus:ring-2 focus:ring-secondary-container focus:outline-none transition-all" placeholder="Tìm Mã chuyến bay, Điểm đến hoặc Hãng hàng không..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all active:opacity-80">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<button class="bg-secondary text-on-secondary px-4 py-2 rounded font-body-md font-bold flex items-center space-x-2 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Thêm chuyến bay mới</span>
+</button>
+</div>
+</header>
+<!-- Content Canvas -->
+<section class="p-container-padding max-w-desktop-max-width mx-auto">
+<div class="mb-8 flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Quản lý chuyến bay</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-1">Theo dõi và quản lý hoạt động bay thời gian thực trên toàn mạng lưới.</p>
+</div>
+<div class="flex space-x-3">
+<div class="flex flex-col">
+<label class="font-label-caps text-label-caps text-outline mb-1 uppercase">Lọc theo trạng thái</label>
+<select class="bg-surface-container-lowest border border-outline-variant px-3 py-2 rounded font-body-md focus:ring-2 focus:ring-secondary-container outline-none min-w-[160px]">
+<option>Tất cả trạng thái</option>
+<option>Hoạt động</option>
+<option>Đã lên lịch</option>
+<option>Trễ chuyến</option>
+<option>Đã hạ cánh</option>
+</select>
+</div>
+<div class="flex flex-col">
+<label class="font-label-caps text-label-caps text-outline mb-1 uppercase">Ngày khởi hành</label>
+<input class="bg-surface-container-lowest border border-outline-variant px-3 py-2 rounded font-body-md focus:ring-2 focus:ring-secondary-container outline-none" type="date"/>
+</div>
+</div>
+</div>
+<!-- Dashboard Stats Summary -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-8">
+<div class="bg-surface-container-lowest border border-outline-variant p-5 rounded flex items-center justify-between group hover:border-secondary transition-colors">
+<div>
+<p class="font-label-caps text-label-caps text-outline uppercase mb-1">Chuyến bay đang hoạt động</p>
+<p class="font-headline-md text-headline-md text-on-surface">142</p>
+</div>
+<div class="bg-secondary-container/20 p-3 rounded text-secondary">
+<span class="material-symbols-outlined">flight_takeoff</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-5 rounded flex items-center justify-between group hover:border-secondary transition-colors">
+<div>
+<p class="font-label-caps text-label-caps text-outline uppercase mb-1">Tỷ lệ đúng giờ</p>
+<p class="font-headline-md text-headline-md text-on-surface">94.2%</p>
+</div>
+<div class="bg-green-100 p-3 rounded text-green-700">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-5 rounded flex items-center justify-between group hover:border-secondary transition-colors">
+<div>
+<p class="font-label-caps text-label-caps text-outline uppercase mb-1">Số ca chậm chuyến</p>
+<p class="font-headline-md text-headline-md text-error">12</p>
+</div>
+<div class="bg-error-container/40 p-3 rounded text-error">
+<span class="material-symbols-outlined">warning</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-5 rounded flex items-center justify-between group hover:border-secondary transition-colors">
+<div>
+<p class="font-label-caps text-label-caps text-outline uppercase mb-1">Tổng lượt bay ngày</p>
+<p class="font-headline-md text-headline-md text-on-surface">849</p>
+</div>
+<div class="bg-surface-variant p-3 rounded text-on-surface-variant">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+</div>
+</div>
+<!-- Comprehensive Data Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Mã chuyến bay</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Hãng hàng không</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Tuyến bay</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Giờ đi</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Giờ đến</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Tàu bay</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Trạng thái</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-right">Thao tác</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono text-secondary">SK-4820</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 bg-primary-container rounded flex items-center justify-center text-[10px] text-white font-bold">SO</div>
+<span class="font-body-md text-body-md text-on-surface">SkyOps Air</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2 font-body-md">
+<span class="font-semibold">LHR</span>
+<span class="material-symbols-outlined text-[16px] text-outline">trending_flat</span>
+<span class="font-semibold">JFK</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">10:45 AM</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">01:30 PM</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">Boeing 787-9</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded text-[11px] font-bold uppercase tracking-wider bg-secondary-container/20 text-secondary border border-secondary/20">
+                                    Hoạt động
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-on-surface-variant hover:text-secondary hover:bg-secondary-container/10 rounded transition-all">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="px-3 py-1 font-body-sm bg-surface-container-low text-on-surface-variant border border-outline-variant rounded hover:border-secondary hover:text-secondary transition-all">
+                                        Chi tiết
+                                    </button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono text-secondary">QA-1192</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 bg-error rounded flex items-center justify-center text-[10px] text-white font-bold">QA</div>
+<span class="font-body-md text-body-md text-on-surface">Qatar Airways</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2 font-body-md">
+<span class="font-semibold">DOH</span>
+<span class="material-symbols-outlined text-[16px] text-outline">trending_flat</span>
+<span class="font-semibold">SYD</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">02:15 AM</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">05:40 PM</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">Airbus A350-1000</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded text-[11px] font-bold uppercase tracking-wider bg-outline-variant/20 text-outline border border-outline-variant/20">
+                                    Đã lên lịch
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-on-surface-variant hover:text-secondary hover:bg-secondary-container/10 rounded transition-all">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="px-3 py-1 font-body-sm bg-surface-container-low text-on-surface-variant border border-outline-variant rounded hover:border-secondary hover:text-secondary transition-all">
+                                        Chi tiết
+                                    </button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono text-secondary">DL-9302</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 bg-blue-900 rounded flex items-center justify-center text-[10px] text-white font-bold">DL</div>
+<span class="font-body-md text-body-md text-on-surface">Delta Airlines</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2 font-body-md">
+<span class="font-semibold">ATL</span>
+<span class="material-symbols-outlined text-[16px] text-outline">trending_flat</span>
+<span class="font-semibold">CDG</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">06:00 PM</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">08:15 AM</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">Airbus A330neo</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded text-[11px] font-bold uppercase tracking-wider bg-error-container/40 text-error border border-error-container">
+                                    Trễ chuyến
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-on-surface-variant hover:text-secondary hover:bg-secondary-container/10 rounded transition-all">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="px-3 py-1 font-body-sm bg-surface-container-low text-on-surface-variant border border-outline-variant rounded hover:border-secondary hover:text-secondary transition-all">
+                                        Chi tiết
+                                    </button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono text-secondary">EK-0201</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 bg-amber-600 rounded flex items-center justify-center text-[10px] text-white font-bold">EK</div>
+<span class="font-body-md text-body-md text-on-surface">Emirates</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2 font-body-md">
+<span class="font-semibold">DXB</span>
+<span class="material-symbols-outlined text-[16px] text-outline">trending_flat</span>
+<span class="font-semibold">FRA</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">08:20 AM</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">12:55 PM</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">Airbus A380-800</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded text-[11px] font-bold uppercase tracking-wider bg-green-100 text-green-700 border border-green-200">
+                                    Đã hạ cánh
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-on-surface-variant hover:text-secondary hover:bg-secondary-container/10 rounded transition-all">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="px-3 py-1 font-body-sm bg-surface-container-low text-on-surface-variant border border-outline-variant rounded hover:border-secondary hover:text-secondary transition-all">
+                                        Chi tiết
+                                    </button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-background transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono text-secondary">LH-4022</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<div class="w-6 h-6 bg-slate-800 rounded flex items-center justify-center text-[10px] text-white font-bold">LH</div>
+<span class="font-body-md text-body-md text-on-surface">Lufthansa</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2 font-body-md">
+<span class="font-semibold">FRA</span>
+<span class="material-symbols-outlined text-[16px] text-outline">trending_flat</span>
+<span class="font-semibold">SFO</span>
+</div>
+</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">01:10 PM</td>
+<td class="px-6 py-4 font-data-mono text-data-mono text-on-surface">04:30 PM</td>
+<td class="px-6 py-4 font-body-md text-on-surface-variant">Boeing 747-8i</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2 py-1 rounded text-[11px] font-bold uppercase tracking-wider bg-secondary-container/20 text-secondary border border-secondary/20">
+                                    Hoạt động
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<div class="flex items-center justify-end space-x-2">
+<button class="p-2 text-on-surface-variant hover:text-secondary hover:bg-secondary-container/10 rounded transition-all">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="px-3 py-1 font-body-sm bg-surface-container-low text-on-surface-variant border border-outline-variant rounded hover:border-secondary hover:text-secondary transition-all">
+                                        Chi tiết
+                                    </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="bg-surface-container-low px-6 py-4 flex items-center justify-between border-t border-outline-variant">
+<p class="font-body-sm text-body-sm text-on-surface-variant">Hiển thị <span class="font-bold">1-10</span> trong số <span class="font-bold">142</span> chuyến bay hoạt động</p>
+<div class="flex space-x-2">
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant bg-surface-container-lowest hover:bg-surface-variant disabled:opacity-50 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="px-3 py-1 border border-secondary rounded text-secondary bg-secondary-container/10 font-bold font-body-sm">1</button>
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant bg-surface-container-lowest hover:bg-surface-variant font-body-sm transition-all">2</button>
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant bg-surface-container-lowest hover:bg-surface-variant font-body-sm transition-all">3</button>
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant bg-surface-container-lowest hover:bg-surface-variant transition-all cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Details -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center bg-primary-container/5 p-6 rounded-lg border border-outline-variant">
+<div class="flex items-center space-x-6">
+<div class="w-16 h-16 rounded bg-secondary-fixed-dim flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Trạng thái hệ thống: Tối ưu</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Các nút theo dõi toàn cầu đồng bộ với luồng dữ liệu ADS-B thời gian thực. Không có lỗi nghiêm trọng trong 24 giờ qua.</p>
+</div>
+</div>
+<div class="flex justify-end">
+<button class="px-6 py-3 border-2 border-primary-container text-primary-container rounded font-bold uppercase tracking-widest text-[11px] hover:bg-primary-container hover:text-white transition-all active:scale-95">
+                    Tải báo cáo vận hành
+                </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Micro-interaction JS for row hover and search focus effects -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Redirect to main SPA and navigate to flights page
+            if (!sessionStorage.getItem('from_index')) {
+                window.location.href = 'index.html#flights';
+            }
+            const searchInput = document.querySelector('input[type="text"]');
+            if (searchInput) {
+                searchInput.addEventListener('focus', () => {
+                    searchInput.parentElement.classList.add('scale-[1.02]');
+                });
+                searchInput.addEventListener('blur', () => {
+                    searchInput.parentElement.classList.remove('scale-[1.02]');
+                });
+            }
+            const statusCells = document.querySelectorAll('span.inline-flex');
+            statusCells.forEach(cell => {
+                const text = cell.textContent.trim();
+                if (text === 'Hoạt động') {
+                    cell.classList.add('animate-pulse');
+                    setTimeout(() => cell.classList.remove('animate-pulse'), 2000);
+                }
+            });
+        });
+    </script>
+</body></html>

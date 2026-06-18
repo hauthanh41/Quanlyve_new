@@ -17,7 +17,8 @@ app.use('/api/bookings', require('./routes/booking.routes'));
 app.use('/api/payments', require('./routes/payment.routes'));
 app.use('/api/seats',    require('./routes/seat.routes'));
 app.use('/api/staff',    require('./routes/staff.routes'));
-app.use('/api/messages', require('./routes/message.routes'));
+app.use('/api/messages',       require('./routes/message.routes'));
+app.use('/api/notifications',  require('./routes/notification.routes'));
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));

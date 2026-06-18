@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>SkyOps Admin</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-page">
+  <div class="login-box">
+    <div class="login-logo">✈ SkyOps Admin</div>
+    <p class="login-sub">Điều hành chuyến bay</p>
+    <div id="login-err" class="err-banner" style="display:none"></div>
+    <label>Email</label>
+    <input id="l-email" type="email" placeholder="admin@skyops.com"/>
+    <label>Mật khẩu</label>
+    <input id="l-pass" type="password" placeholder="••••••••"/>
+    <button id="login-btn">Đăng nhập</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-icon">✈</div>
+      <div>
+        <div class="sb-title">SkyOps Admin</div>
+        <div class="sb-sub">Điều hành bay</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <a class="nav-link active" data-page="dashboard">
+        <span class="nav-icon">⊞</span><span>Bảng điều khiển</span>
+      </a>
+      <a class="nav-link" data-page="flights">
+        <span class="nav-icon">✈</span><span>Chuyến bay</span>
+      </a>
+      <a class="nav-link" data-page="bookings">
+        <span class="nav-icon">🎫</span><span>Đặt chỗ</span>
+      </a>
+      <a class="nav-link" data-page="customers">
+        <span class="nav-icon">👥</span><span>Khách hàng</span>
+      </a>
+      <a class="nav-link" data-page="messages">
+        <span class="nav-icon">💬</span><span>Tin nhắn</span>
+      </a>
+      <a class="nav-link" data-page="revenue">
+        <span class="nav-icon">📊</span><span>Báo cáo</span>
+      </a>
+      <a class="nav-link" data-page="alerts">
+        <span class="nav-icon">🚨</span><span>Gửi thông báo</span>
+      </a>
+      <a class="nav-link" data-page="settings">
+        <span class="nav-icon">⚙</span><span>Cài đặt</span>
+      </a>
+    </nav>
+    <div class="sb-user">
+      <div class="sb-avatar" id="sb-avatar-text">A</div>
+      <div>
+        <div class="sb-uname" id="sb-uname">Quản trị viên</div>
+        <div class="sb-urole" id="sb-urole">Super Admin</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-wrap">
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-search">
+        <span class="search-icon">🔍</span>
+        <input id="global-search" placeholder="Tìm Mã chuyến bay, Điểm đến hoặc Hãng hàng không..."/>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" onclick="toggleNotifPanel()" title="Thông báo" style="position:relative">
+          🔔 <span id="notif-badge" class="notif-badge" style="display:none">0</span>
+        </button>
+        <button class="icon-btn" title="Trợ giúp">❓</button>
+        <div id="topbar-status" class="status-pill">🟢 HỆ THỐNG TRỰC TUYẾN</div>
+        <button class="btn-logout" onclick="doLogout()">Đăng xuất</button>
+      </div>
+    </header>
+
+    <!-- NOTIFICATION PANEL -->
+    <div id="notif-panel" class="notif-panel" style="display:none">
+      <div class="notif-header">
+        <b>Thông báo</b>
+        <button onclick="markAllRead()" class="link-btn">Đánh dấu tất cả đã đọc</button>
+      </div>
+      <div id="notif-list"></div>
+    </div>
+
+    <!-- PAGES -->
+    <div class="content" id="content">
+      <div id="page-dashboard"  class="page active"></div>
+      <div id="page-flights"    class="page"></div>
+      <div id="page-bookings"   class="page"></div>
+      <div id="page-customers"  class="page"></div>
+      <div id="page-messages"   class="page"></div>
+      <div id="page-revenue"    class="page"></div>
+      <div id="page-alerts"     class="page"></div>
+      <div id="page-settings"   class="page"></div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

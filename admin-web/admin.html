@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SkyOps Admin - Bảng điều khiển</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#45464d",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-container-high": "#dce9ff",
+                        "outline-variant": "#c6c6cd",
+                        "surface-tint": "#565e74",
+                        "surface": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-surface": "#0b1c30",
+                        "primary-container": "#131b2e",
+                        "on-secondary-fixed-variant": "#004e5c",
+                        "background": "#f8f9ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "primary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#acedff",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#bec6e0",
+                        "on-tertiary-fixed": "#191c1e",
+                        "tertiary": "#000000",
+                        "on-secondary-container": "#006172",
+                        "primary": "#000000",
+                        "inverse-surface": "#213145",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f8f9ff",
+                        "secondary-container": "#57dffe",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "surface-container": "#e5eeff",
+                        "on-primary-fixed": "#131b2e",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "error": "#ba1a1a",
+                        "outline": "#76777d",
+                        "on-primary-container": "#7c839b",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-low": "#eff4ff",
+                        "tertiary-container": "#191c1e",
+                        "on-secondary-fixed": "#001f26",
+                        "on-background": "#0b1c30",
+                        "secondary": "#00687a",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary-container": "#818486",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#dae2fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "mobile-margin": "16px",
+                        "desktop-max-width": "1600px",
+                        "sidebar-width": "260px",
+                        "container-padding": "24px",
+                        "unit": "4px",
+                        "tablet-margin": "24px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-sm": ["18px", {"lineHeight": "26px", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "data-mono": ["13px", {"lineHeight": "20px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-background min-h-screen">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-sidebar-width fixed left-0 top-0 bg-primary-container flex flex-col z-50">
+<div class="px-6 py-8">
+<div class="flex items-center space-x-3 mb-10">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-fixed" data-icon="flight">flight</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-tertiary">SkyOps Admin</h1>
+<p class="text-on-primary-container font-body-sm text-body-sm">Vận hành bay</p>
+</div>
+</div>
+<nav class="space-y-1">
+<!-- Dashboard Active -->
+<div class="flex items-center space-x-3 bg-on-primary-fixed-variant/20 border-l-4 border-secondary-fixed text-secondary-fixed px-4 py-3 cursor-pointer transition-all active:scale-95">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Bảng điều khiển</span>
+</div>
+<!-- Inactive Tabs -->
+<div class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary hover:bg-on-primary-fixed-variant/10 px-4 py-3 cursor-pointer transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="flight_takeoff">flight_takeoff</span>
+<span class="font-body-md text-body-md">Chuyến bay</span>
+</div>
+<div class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary hover:bg-on-primary-fixed-variant/10 px-4 py-3 cursor-pointer transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="font-body-md text-body-md">Đặt chỗ</span>
+</div>
+<div class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary hover:bg-on-primary-fixed-variant/10 px-4 py-3 cursor-pointer transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-md text-body-md">Khách hàng</span>
+</div>
+<div class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary hover:bg-on-primary-fixed-variant/10 px-4 py-3 cursor-pointer transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-body-md text-body-md">Báo cáo</span>
+</div>
+<div class="flex items-center space-x-3 text-on-primary-container hover:text-on-tertiary hover:bg-on-primary-fixed-variant/10 px-4 py-3 cursor-pointer transition-colors duration-200 active:scale-95">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Cài đặt</span>
+</div>
+</nav>
+</div>
+<div class="mt-auto p-6 border-t border-on-primary-fixed-variant/20">
+<div class="flex items-center space-x-3">
+<img alt="Administrator Profile" class="w-10 h-10 rounded-full border border-secondary-fixed/30" data-alt="A professional portrait of a senior aviation administrator in a crisp white uniform, set against a blurred background of a modern airport terminal with soft blue and grey tones. The lighting is bright and authoritative, conveying a sense of calm leadership and operational expertise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdVsz05pENGgCAHGRgpzxGduD4ovLR_NHNwBZH2Iaz49j2Rd7wTK0_2ouTOe6pkDJFEI3Vt3kC8R2DrTAmIyl-qypPmQ4sGOkwH3EirSyTpzjpoYvduZMPwBjayEyQl4DF2kwVqCBKclxvt7FyypwXAm1ZaqM8NVlBhYzUrsg1uUfv2DRAQjSH0Tcf0ypN3T8ojcJ8Ipfx1QKxFKHEg_mlQvtRqigd1vED7RWbvEhcvLsPn0kU6FbLxfWUbV7MaFYfX1DOcSCn0iU"/>
+<div class="overflow-hidden">
+<p class="font-body-md text-body-md font-bold text-on-tertiary truncate">Đại úy Miller</p>
+<p class="font-body-sm text-body-sm text-on-primary-container truncate">Quản lý đội bay</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="h-16 bg-surface-container-lowest flex justify-between items-center px-container-padding border-b border-outline-variant sticky top-0 z-40">
+<div class="flex items-center w-1/3">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg py-1.5 pl-10 pr-4 text-body-md font-body-md focus:outline-none focus:ring-2 focus:ring-secondary-container" placeholder="Tìm kiếm số hiệu, tàu bay hoặc tuyến..." type="text"/>
+</div>
+</div>
+<div class="flex items-center space-x-6">
+<div class="flex items-center space-x-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-all cursor-pointer active:opacity-80" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full transition-all cursor-pointer active:opacity-80" data-icon="help_outline">help_outline</button>
+</div>
+<div class="h-8 w-px bg-outline-variant"></div>
+<div class="flex items-center space-x-3">
+<span class="text-label-caps font-label-caps text-on-surface-variant">UTC 14:22</span>
+<div class="bg-secondary-container/20 px-3 py-1 rounded-full border border-secondary-container/40">
+<span class="text-body-sm font-body-sm font-bold text-secondary">HỆ THỐNG TRỰC TUYẾN</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-8 space-y-8 flex-grow">
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Tổng quan vận hành</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Giám sát thời gian thực đội bay và hiệu suất thương mại.</p>
+</div>
+<button class="bg-secondary-fixed text-on-secondary-fixed px-5 py-2.5 rounded-lg font-body-md font-bold flex items-center space-x-2 shadow-sm hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+<span>Nhập chuyến bay mới</span>
+</button>
+</div>
+<!-- Metric Cards Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl flex flex-col justify-between group hover:border-secondary-fixed transition-colors">
+<div class="flex justify-between items-start">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Tổng chuyến bay</span>
+<div class="w-8 h-8 rounded-lg bg-secondary-container/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="flight_takeoff">flight_takeoff</span>
+</div>
+</div>
+<div class="mt-4">
+<div class="text-headline-md font-headline-md text-on-surface">1,284</div>
+<div class="flex items-center mt-1 text-green-600 space-x-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span class="text-body-sm font-body-sm font-bold">+12.5%</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl flex flex-col justify-between group hover:border-secondary-fixed transition-colors">
+<div class="flex justify-between items-start">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Lượng đặt vé hôm nay</span>
+<div class="w-8 h-8 rounded-lg bg-secondary-container/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="confirmation_number">confirmation_number</span>
+</div>
+</div>
+<div class="mt-4">
+<div class="text-headline-md font-headline-md text-on-surface">432</div>
+<div class="flex items-center mt-1 text-green-600 space-x-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_up">trending_up</span>
+<span class="text-body-sm font-body-sm font-bold">+5.2%</span>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl flex flex-col justify-between group hover:border-secondary-fixed transition-colors">
+<div class="flex justify-between items-start">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Doanh thu (USD)</span>
+<div class="w-8 h-8 rounded-lg bg-secondary-container/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="payments">payments</span>
+</div>
+</div>
+<div class="mt-4">
+<div class="text-headline-md font-headline-md text-on-surface">$1.2M</div>
+<div class="flex items-center mt-1 text-amber-600 space-x-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="trending_flat">trending_flat</span>
+<span class="text-body-sm font-body-sm font-bold">+0.8%</span>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl flex flex-col justify-between group hover:border-secondary-fixed transition-colors">
+<div class="flex justify-between items-start">
+<span class="text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Tàu bay đang hoạt động</span>
+<div class="w-8 h-8 rounded-lg bg-secondary-container/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]" data-icon="airplanemode_active">airplanemode_active</span>
+</div>
+</div>
+<div class="mt-4">
+<div class="text-headline-md font-headline-md text-on-surface">86 / 94</div>
+<div class="w-full bg-surface-container-low h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-secondary-fixed h-full w-[91%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Grid: Data Table & Activity Feed -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Flight Schedule Table -->
+<div class="lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<div class="px-6 py-5 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Lịch trình bay</h3>
+<div class="flex items-center space-x-2">
+<button class="text-body-sm font-bold text-secondary flex items-center hover:underline">
+                            Xem lịch trình đầy đủ
+                            <span class="material-symbols-outlined text-[16px] ml-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Số hiệu</th>
+<th class="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Tuyến</th>
+<th class="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Khởi hành</th>
+<th class="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant uppercase tracking-wider">Trạng thái</th>
+<th class="px-6 py-4"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono font-bold text-on-surface">SK-402</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<span class="font-bold">LHR</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-bold">JFK</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">14:45 UTC</td>
+<td class="px-6 py-4">
+<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-body-sm font-bold inline-flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
+                                    Đúng giờ
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono font-bold text-on-surface">SK-911</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<span class="font-bold">CDG</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-bold">DXB</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">15:10 UTC</td>
+<td class="px-6 py-4">
+<span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-body-sm font-bold inline-flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-2"></span>
+                                    Trễ chuyến
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono font-bold text-on-surface">SK-225</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<span class="font-bold">SIN</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-bold">SYD</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">15:55 UTC</td>
+<td class="px-6 py-4">
+<span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-body-sm font-bold inline-flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-2"></span>
+                                    Đang lên máy bay
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono font-bold text-on-surface">SK-054</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<span class="font-bold">HND</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-bold">LAX</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">16:30 UTC</td>
+<td class="px-6 py-4">
+<span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-body-sm font-bold inline-flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-2"></span>
+                                    Đúng giờ
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-4 font-data-mono text-data-mono font-bold text-on-surface">SK-330</td>
+<td class="px-6 py-4">
+<div class="flex items-center space-x-2">
+<span class="font-bold">FRA</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[14px]" data-icon="arrow_forward">arrow_forward</span>
+<span class="font-bold">BER</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md">17:05 UTC</td>
+<td class="px-6 py-4">
+<span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-body-sm font-bold inline-flex items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-2"></span>
+                                    Đã hủy
+                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Recent Activity Feed -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<div class="px-6 py-5 border-b border-outline-variant">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Hoạt động gần đây</h3>
+</div>
+<div class="p-6 flex-grow overflow-y-auto custom-scrollbar max-h-[400px]">
+<ul class="space-y-6 relative">
+<!-- Vertical Line -->
+<div class="absolute left-3.5 top-0 bottom-0 w-px bg-outline-variant z-0"></div>
+<li class="relative z-10 flex space-x-4">
+<div class="w-7 h-7 rounded-full bg-secondary-fixed border-2 border-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-on-secondary-fixed" data-icon="priority_high">priority_high</span>
+</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Thay đổi cửa: SK-402</p>
+<p class="text-body-sm text-on-surface-variant">Chuyển từ Cửa A12 sang C05. Thông báo đã gửi tới hành khách.</p>
+<span class="text-[11px] font-label-caps text-on-surface-variant/60">2 PHÚT TRƯỚC</span>
+</div>
+</li>
+<li class="relative z-10 flex space-x-4">
+<div class="w-7 h-7 rounded-full bg-green-500 border-2 border-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" data-icon="check">check</span>
+</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Bảo trì hoàn tất</p>
+<p class="text-body-sm text-on-surface-variant">Tàu bay N882XF (Airbus A350) đã sẵn sàng vận hành.</p>
+<span class="text-[11px] font-label-caps text-on-surface-variant/60">45 PHÚT TRƯỚC</span>
+</div>
+</li>
+<li class="relative z-10 flex space-x-4">
+<div class="w-7 h-7 rounded-full bg-blue-500 border-2 border-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" data-icon="info">info</span>
+</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Yêu cầu tiếp nhiên liệu mới</p>
+<p class="text-body-sm text-on-surface-variant">15,000kg được yêu cầu cho chuyến bay SK-225 (SIN-SYD).</p>
+<span class="text-[11px] font-label-caps text-on-surface-variant/60">1 GIỜ TRƯỚC</span>
+</div>
+</li>
+<li class="relative z-10 flex space-x-4">
+<div class="w-7 h-7 rounded-full bg-surface-variant border-2 border-surface-container-lowest flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-on-surface" data-icon="person">person</span>
+</div>
+<div>
+<p class="text-body-md font-bold text-on-surface">Tổ bay đã chỉ định</p>
+<p class="text-body-sm text-on-surface-variant">Cơ trưởng Sarah Connor được chỉ định cho chuyến bay đường dài SK-911.</p>
+<span class="text-[11px] font-label-caps text-on-surface-variant/60">3 GIỜ TRƯỚC</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Operational Map / Atmosphere Section -->
+<div class="relative w-full h-80 rounded-2xl overflow-hidden shadow-xl group border border-outline-variant">
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/80 via-transparent to-transparent pointer-events-none"></div>
+<div class="absolute inset-0 flex flex-col justify-end p-8 text-white">
+<div class="flex items-center space-x-4 mb-2">
+<span class="material-symbols-outlined text-secondary-fixed animate-pulse" data-icon="radar">radar</span>
+<h3 class="font-headline-sm text-headline-sm uppercase tracking-widest text-secondary-fixed">Dòng dữ liệu không lưu trực tiếp</h3>
+</div>
+<div class="flex justify-between items-end">
+<p class="text-body-lg text-white/80 max-w-xl">
+                        Trực quan hóa các hành lang bay khu vực và hệ thống thời tiết ảnh hưởng đến các tuyến Bắc Đại Tây Dương. Hệ thống đang xử lý 142 luồng dữ liệu trực tiếp.
+                    </p>
+<button class="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 px-6 py-2 rounded-lg transition-all active:scale-95 font-body-md font-bold">
+                        Mở rộng bản đồ radar đầy đủ
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-auto px-container-padding py-6 border-t border-outline-variant flex justify-between items-center text-on-surface-variant/60">
+<p class="text-body-sm">© 2024 SkyOps Systems. Bảo lưu mọi quyền.</p>
+<div class="flex space-x-6">
+<a class="text-body-sm hover:text-secondary-fixed-dim transition-colors" href="#">Trung tâm tuân thủ</a>
+<a class="text-body-sm hover:text-secondary-fixed-dim transition-colors" href="#">Tài liệu API</a>
+<a class="text-body-sm hover:text-secondary-fixed-dim transition-colors" href="#">Kiểm tra bảo mật</a>
+</div>
+</footer>
+</main>
+<script>
+    // Simple interactivity for demonstration
+    document.querySelectorAll('button, [class*="cursor-pointer"]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            const ripple = document.createElement('div');
+            ripple.classList.add('absolute', 'inset-0', 'bg-white/20', 'rounded-inherit', 'pointer-events-none');
+            el.classList.add('relative');
+            el.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 400);
+        });
+    });
+
+    // Theme toggle simulation (optional if needed for dark mode testing)
+    const toggleDarkMode = () => {
+        document.documentElement.classList.toggle('dark');
+    }
+</script>
+</body></html>
