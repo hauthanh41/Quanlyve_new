@@ -227,8 +227,16 @@ fun SeatSelectionScreen(
     val ecoRowNumbers = ecoGrid.keys.toList()
     val exitAfterIndex = ecoRowNumbers.indexOfFirst { it > 15 }.takeIf { it > 0 }
 
-    val price = selectedSeat?.let {
-        if (it.isBusinessClass()) 2_000_000L else 1_250_000L
+    // Giá đồng bộ với PaymentScreen: flight.price × hệ số hạng + thuế 10%
+    val price = selectedSeat?.let { seat ->
+        val multiplier = when (seat.classType) {
+            "FIRST"    -> 2.5
+            "BUSINESS" -> 1.6
+            else       -> 1.0
+        }
+        val base = flight.price * multiplier
+        val total = base + base * 0.1   // +10% thuế
+        total.toLong()
     } ?: 0L
 
     Column(Modifier.fillMaxSize().background(Color.White)) {
@@ -406,7 +414,7 @@ fun SeatSelectionScreen(
                 }
             }
             Column(horizontalAlignment = Alignment.End) {
-                Text("TỔNG CỘNG", fontSize = 11.sp, color = LabelText)
+                Text("TỔNG CỘNG (đã VAT)", fontSize = 11.sp, color = LabelText)
                 Text(
                     if (price > 0) "%,d VND".format(price) else "—",
                     fontSize = 16.sp, fontWeight = FontWeight.Bold, color = BusinessBlue
